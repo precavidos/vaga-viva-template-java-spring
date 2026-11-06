@@ -4,6 +4,7 @@ name: Vaga Viva
 
 on:
   push:
+    branches: [main]
   pull_request:
 
 permissions:

@@ -22,6 +22,8 @@ public class MissionPlanCondition implements ExecutionCondition {
 
 	public static final Path PLAN_FILE = Path.of(".vaga-viva", "plan.json");
 
+	private static final String PLAN_FILE_NAME = ".vaga-viva/plan.json";
+
 	static final Set<String> MISSIONS = Set.of("patients-api", "persistence", "scheduling-rules", "input-validation",
 			"bug-hunt", "pagination", "ci-pipeline", "availability-query", "containerization", "reminder-strategies",
 			"api-security");
@@ -39,7 +41,7 @@ public class MissionPlanCondition implements ExecutionCondition {
 		}
 		Path planFile = projectRoot.resolve(PLAN_FILE);
 		if (!Files.exists(planFile)) {
-			return ConditionEvaluationResult.enabled("sem " + PLAN_FILE + ": todas as missões rodam");
+			return ConditionEvaluationResult.enabled("sem " + PLAN_FILE_NAME + ": todas as missões rodam");
 		}
 		Set<String> planned = readMissions(planFile);
 		for (String mission : missionTags) {
@@ -48,7 +50,7 @@ public class MissionPlanCondition implements ExecutionCondition {
 			}
 		}
 		return ConditionEvaluationResult
-			.disabled("Missão '" + String.join("', '", missionTags) + "' fora do seu plano (" + PLAN_FILE + ")");
+			.disabled("Missão '" + String.join("', '", missionTags) + "' fora do seu plano (" + PLAN_FILE_NAME + ")");
 	}
 
 	private static Set<String> readMissions(Path planFile) {
@@ -56,14 +58,14 @@ public class MissionPlanCondition implements ExecutionCondition {
 			JsonNode missions = JsonMapper.builder().build().readTree(Files.readString(planFile)).path("missions");
 			if (!missions.isArray()) {
 				throw new ExtensionConfigurationException(
-						"O arquivo " + PLAN_FILE + " precisa ter a lista \"missions\" com os ids das missões");
+						"O arquivo " + PLAN_FILE_NAME + " precisa ter a lista \"missions\" com os ids das missões");
 			}
 			Set<String> planned = new HashSet<>();
 			missions.forEach((mission) -> planned.add(mission.asString()));
 			return planned;
 		}
 		catch (IOException | JacksonException ex) {
-			throw new ExtensionConfigurationException("Não foi possível ler " + PLAN_FILE + ": " + ex.getMessage(), ex);
+			throw new ExtensionConfigurationException("Não foi possível ler " + PLAN_FILE_NAME + ": " + ex.getMessage(), ex);
 		}
 	}
 
