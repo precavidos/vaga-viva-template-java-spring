@@ -1,0 +1,10 @@
+# Usuários fictícios dos testes. A missão api-security lê esta lista da propriedade clinic.security.users.
+clinic:
+  security:
+    users:
+      - username: recepcao
+        password: recepcao-senha
+        role: RECEPTIONIST
+      - username: dra.helena
+        password: profissional-senha
+        role: PROFESSIONAL
