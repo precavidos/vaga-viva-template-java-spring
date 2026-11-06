@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: clinic
+  datasource:
+    url: jdbc:postgresql://localhost:5432/clinic
+    username: clinic
+    password: clinic
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+
+clinic:
+  time-zone: America/Sao_Paulo
+  opening-hours:
+    days: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY
+    opens-at: "08:00"
+    closes-at: "18:00"
