@@ -22,6 +22,23 @@ jobs:
           java-version: "21"
           cache: maven
 
+      # O cache do setup-java guarda as dependências, não o Maven que o wrapper baixa.
+      - name: Cache do Maven
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/wrapper
+          key: maven-wrapper-${{ hashFiles('.mvn/wrapper/maven-wrapper.properties') }}
+
+      # O primeiro build do repositório ainda baixa o Maven: uma falha de rede não deve parecer erro no seu código.
+      - name: Maven
+        run: |
+          for attempt in 1 2 3; do
+            ./mvnw -B -q -v > /dev/null && exit 0
+            echo "O download do Maven falhou (tentativa $attempt de 3). Tentando de novo em 15 s."
+            sleep 15
+          done
+          exit 1
+
       - name: Testes
         run: ./mvnw -B verify
 
